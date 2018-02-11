@@ -1,11 +1,8 @@
 const Hapi = require('hapi')
 const {logger} = require('./logger')
 const {createChannel} = require('./rabbit')
-
-const {
-  rabbit: {queueName: rabbitQueueName},
-  server: {port, host}
-} = require('./conf');
+const {submitRequest} = require('./routes')
+const {server: {port, host}} = require('./conf');
 
 (async () => {
   logger.info('connecting to rabbit')
@@ -17,12 +14,7 @@ const {
   server.route({
     method: 'POST',
     path: '/request/{url}',
-    handler: async request => {
-      const url = request.params.url
-      logger.info(`submitting url: ${url}`)
-      await rabbitChannel.sendToQueue(rabbitQueueName, Buffer.from(url))
-      return 200
-    }
+    handler: request => submitRequest(request, rabbitChannel)
   })
 
   server.start(err => {
