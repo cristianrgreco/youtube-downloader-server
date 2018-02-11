@@ -8,6 +8,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
+    "amqplib": "^0.5.2",
     "hapi": "^17.2.0",
     "winston": "^3.0.0-rc1"
   },
