@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node src",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "hapi": "^17.2.0",
+    "winston": "^3.0.0-rc1"
+  },
   "devDependencies": {
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
