@@ -1,7 +1,7 @@
 const Hapi = require('hapi')
 const {logger} = require('./logger')
 const {createChannel} = require('./rabbit')
-const {submitRequest} = require('./routes')
+const {enqueueRequest} = require('./controllers')
 const {server: {port, host}} = require('./conf');
 
 (async () => {
@@ -14,7 +14,7 @@ const {server: {port, host}} = require('./conf');
   server.route({
     method: 'POST',
     path: '/request/{url}',
-    handler: request => submitRequest(request, rabbitChannel)
+    handler: request => enqueueRequest(request, rabbitChannel)
   })
 
   server.start(err => {
