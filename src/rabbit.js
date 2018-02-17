@@ -1,8 +1,8 @@
 const amqplib = require('amqplib')
-const {rabbit: {url, queueName, reconnectAttempts, reconnectDelay}} = require('./conf')
 const {logger} = require('./logger')
+const {rabbit: {url, queueName, reconnectDelay}} = require('./conf')
 
-const createChannel = () => new Promise(async (resolve, reject) => {
+const createChannel = () => new Promise(async resolve => {
   const attempt = async (attempts = 1) => {
     try {
       logger.debug(`attempting to connect to rabbit #${attempts}: ${url}`)
@@ -11,11 +11,7 @@ const createChannel = () => new Promise(async (resolve, reject) => {
       await channel.assertQueue(queueName, {durable: false, autoDelete: true})
       return resolve(channel)
     } catch (e) {
-      if (attempts > reconnectAttempts) {
-        return reject(new Error(e))
-      } else {
-        setTimeout(() => attempt(attempts + 1), reconnectDelay)
-      }
+      setTimeout(() => attempt(attempts + 1), reconnectDelay)
     }
   }
   return attempt()

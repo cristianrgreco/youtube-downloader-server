@@ -7,7 +7,6 @@ module.exports = {
   rabbit: {
     url: process.env.RABBIT_HOST === undefined ? 'amqp://localhost' : `amqp://${process.env.RABBIT_HOST}`,
     queueName: 'requests',
-    reconnectAttempts: 10,
     reconnectDelay: 3000
   }
 }
