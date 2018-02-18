@@ -13,7 +13,7 @@ const {server: {port, host}} = require('./conf');
 
   server.route({
     method: 'POST',
-    path: '/request/{url}',
+    path: '/request',
     handler: request => enqueueRequest(request, rabbitChannel)
   })
 
