@@ -9,7 +9,7 @@ const createChannel = () => new Promise(async resolve => {
       const connection = await amqplib.connect(url)
       const channel = await connection.createChannel()
       await channel.assertQueue(queueName, {durable: false, autoDelete: true})
-      logger.debug(`connected to rabbit on queue ${queueName}`)
+      logger.debug(`connected to rabbit on queue: ${queueName}`)
       return resolve(channel)
     } catch (e) {
       setTimeout(() => attempt(attempts + 1), reconnectDelay)
