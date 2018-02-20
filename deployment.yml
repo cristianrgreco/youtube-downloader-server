@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtube-downloader-server-deployment
+spec:
+  selector:
+    matchLabels:
+      app: youtube-downloader-server
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: youtube-downloader-server
+    spec:
+      containers:
+      - name: youtube-downloader-server
+        image: youtube-downloader-server:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: RABBIT_HOST
+          value: rabbitmq
