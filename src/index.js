@@ -5,10 +5,11 @@ const {createRequest} = require('./controllers')
 const {server: {port, host}} = require('./conf');
 
 (async () => {
-  logger.info('connecting to rabbit')
+  logger.log('info', 'connecting to rabbit')
   const rabbitChannel = await createChannel()
+  logger.log('info', 'connected to rabbit')
 
-  logger.info(`starting http server: ${host}:${port}`)
+  logger.log('info', 'starting http server', {host, port})
   const server = new Hapi.Server({port, host, routes: {cors: true}})
 
   server.route({
@@ -17,10 +18,6 @@ const {server: {port, host}} = require('./conf');
     handler: request => createRequest(request, rabbitChannel)
   })
 
-  server.start(err => {
-    if (err) {
-      throw err
-    }
-    logger.info(`Listening on port: ${port}`)
-  })
+  await server.start()
+  logger.log('info', 'started http server')
 })()
