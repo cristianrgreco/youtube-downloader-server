@@ -1,11 +1,23 @@
+const {
+  LOG_LEVEL,
+  HOST,
+  PORT,
+  RABBIT_HOST,
+  RABBIT_PORT,
+  RABBIT_USER,
+  RABBIT_PASS
+} = process.env
+
 module.exports = {
-  logLevel: process.env.LOG_LEVEL || 'info',
+  logLevel: LOG_LEVEL || 'info',
   server: {
-    host: process.env.HOST || '0.0.0.0',
-    port: process.env.PORT || 8080
+    host: HOST || '0.0.0.0',
+    port: PORT || 8080
   },
   rabbit: {
-    url: process.env.RABBIT_HOST === undefined ? 'amqp://localhost' : `amqp://${process.env.RABBIT_HOST}`,
+    url: RABBIT_HOST === undefined
+      ? 'amqp://localhost'
+      : `amqp://${RABBIT_USER}:${RABBIT_PASS}@${RABBIT_HOST}:${RABBIT_PORT}`,
     queueName: 'requests',
     reconnectDelay: 3000
   }

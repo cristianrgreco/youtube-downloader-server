@@ -12,6 +12,7 @@ const createChannel = () => new Promise(async resolve => {
       logger.debug(`connected to rabbit on queue: ${queueName}`)
       return resolve(channel)
     } catch (e) {
+      logger.warn(e.stack)
       setTimeout(() => attempt(attempts + 1), reconnectDelay)
     }
   }
