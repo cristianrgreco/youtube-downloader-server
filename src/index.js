@@ -34,11 +34,9 @@ const publishRequest = async (rabbit, {url, type}) => {
   const requestsQueue = 'requests'
 
   requestsChannel.assertQueue(requestsQueue, {durable: true})
-  requestsChannel.sendToQueue(
-    requestsQueue,
-    Buffer.from(JSON.stringify({url, type})),
-    {persistent: true}
-  )
+  requestsChannel.sendToQueue(requestsQueue, Buffer.from(JSON.stringify({url, type})), {
+    persistent: true
+  })
 }
 
 const consumeResponses = async (socketClient, rabbit, {url, type}) => {
@@ -60,7 +58,7 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   })
 }
 
-(async () => {
+;(async () => {
   const server = await startServer()
   const rabbit = await connectToRabbit()
 
