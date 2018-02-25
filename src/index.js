@@ -44,7 +44,7 @@ const publishRequest = async (rabbit, {url, type}) => {
 const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   const responseChannel = await rabbit.createChannel()
   const responseExchange = 'responses'
-  const key = `${Buffer.from(url).toString('base64')}.${type}}`
+  const key = `${Buffer.from(url).toString('base64')}.${type}`
 
   responseChannel.assertExchange(responseExchange, 'topic', {durable: false})
   const {queue: responseQueue} = await responseChannel.assertQueue('', {exclusive: true})
