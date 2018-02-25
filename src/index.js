@@ -1,11 +1,11 @@
 const Hapi = require('hapi')
 const amqplib = require('amqplib')
 const socket = require('socket.io')
+const conf = require('./conf')
 const {logger} = require('./logger')
-const {server: {port, host}} = require('./conf')
-const {rabbit: {url: rabbitUrl, reconnectDelay: rabbitReconnectDelay}} = require('./conf')
 
 const startServer = async () => {
+  const {server: {host, port}} = conf
   logger.info('starting http server', {host, port})
   const server = new Hapi.Server({port, host, routes: {cors: true}})
   await server.start()
@@ -13,15 +13,16 @@ const startServer = async () => {
 }
 
 const connectToRabbit = async () => {
-  logger.info('connecting to rabbit', {rabbitUrl})
+  const {rabbit: {url, reconnectDelay}} = conf
+  logger.info('connecting to rabbit', {url})
 
   return new Promise(resolve => {
     const connect = async (attempt = 1) => {
       try {
         logger.debug('connecting to rabbit', {attempt})
-        resolve(await amqplib.connect(rabbitUrl))
+        resolve(await amqplib.connect(url))
       } catch (e) {
-        setTimeout(() => connect(attempt + 1), rabbitReconnectDelay)
+        setTimeout(() => connect(attempt + 1), reconnectDelay)
       }
     }
     return connect()
@@ -53,6 +54,7 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   responseChannel.consume(responseQueue, message => {
     const messageContent = JSON.parse(message.content.toString())
     logger.debug('message received', {messageContent})
+    responseChannel.ack(message)
 
     socketClient.emit(key, messageContent)
   })
