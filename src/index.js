@@ -58,7 +58,7 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   })
 }
 
-;(async () => {
+const main = async () => {
   const server = await startServer()
   const rabbit = await connectToRabbit()
 
@@ -70,6 +70,6 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
       await consumeResponses(client, rabbit, {url, type})
     })
   })
+}
 
-  logger.log('info', 'ready')
-})()
+main().then(() => logger.info('ready'), e => logger.error(e.stack))
