@@ -34,9 +34,13 @@ const publishRequest = async (rabbit, {url, type}) => {
   const requestsQueue = 'requests'
 
   requestsChannel.assertQueue(requestsQueue, {durable: true})
-  requestsChannel.sendToQueue(requestsQueue, Buffer.from(JSON.stringify({url, type})), {
-    persistent: true
-  })
+  requestsChannel.sendToQueue(
+    requestsQueue,
+    Buffer.from(JSON.stringify({url, type})),
+    {
+      persistent: true
+    }
+  )
 }
 
 const consumeResponses = async (socketClient, rabbit, {url, type}) => {
@@ -45,7 +49,9 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   const key = `${Buffer.from(url).toString('base64')}.${type}`
 
   responseChannel.assertExchange(responseExchange, 'topic', {durable: false})
-  const {queue: responseQueue} = await responseChannel.assertQueue('', {exclusive: true})
+  const {queue: responseQueue} = await responseChannel.assertQueue('', {
+    exclusive: true
+  })
   responseChannel.bindQueue(responseQueue, responseExchange, key)
 
   logger.info('waiting for response', {responseQueue, key})

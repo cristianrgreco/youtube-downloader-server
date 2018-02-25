@@ -1,4 +1,12 @@
-const {LOG_LEVEL, HOST, PORT, RABBIT_HOST, RABBIT_PORT, RABBIT_USER, RABBIT_PASS} = process.env
+const {
+  LOG_LEVEL,
+  HOST,
+  PORT,
+  RABBIT_HOST,
+  RABBIT_PORT,
+  RABBIT_USER,
+  RABBIT_PASS
+} = process.env
 
 module.exports = {
   logLevel: LOG_LEVEL || 'info',
