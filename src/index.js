@@ -55,7 +55,7 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
   })
   responseChannel.bindQueue(responseQueue, responseExchange, key)
 
-  logger.info('waiting for response', {responseQueue, key})
+  logger.info('consuming responses', {responseQueue, key})
   responseChannel.consume(responseQueue, message => {
     const messageContent = JSON.parse(message.content.toString())
     logger.debug('message received', {messageContent})
