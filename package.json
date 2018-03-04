@@ -6,11 +6,13 @@
   "scripts": {
     "start": "node src",
     "test": "jest --coverage",
-    "format": "prettier --write 'src/**/*.{js,json}'"
+    "format": "prettier --write 'src/**/*.{js,json}'",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "amqplib": "^0.5.2",
     "hapi": "^17.2.0",
+    "hot-shots": "^5.2.0",
     "socket.io": "^2.0.4",
     "winston": "^3.0.0-rc1"
   },
@@ -22,6 +24,14 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "jest": "^22.2.2",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0",
     "prettier": "^1.10.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "yarn format",
+      "git add"
+    ]
   }
 }

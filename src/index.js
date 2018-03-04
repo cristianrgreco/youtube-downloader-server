@@ -1,6 +1,7 @@
 const Hapi = require('hapi')
 const amqplib = require('amqplib')
 const socket = require('socket.io')
+const StatsD = require('hot-shots')
 const conf = require('./conf')
 const {logger} = require('./logger')
 
@@ -65,12 +66,19 @@ const consumeResponses = async (socketClient, rabbit, {url, type}) => {
 }
 
 const main = async () => {
+  const stats = new StatsD()
   const server = await startServer()
   const rabbit = await connectToRabbit()
 
   const io = socket.listen(server.listener)
   io.on('connection', client => {
+    stats.increment('server.socket_connection')
+
     client.on('request', async ({url, type}) => {
+      stats.increment('server.socket_request')
+      stats.set('server.socket_request_url', url)
+      stats.set('server.socket_request_type', type)
+
       logger.info('enqueueing request', {url, type})
       await publishRequest(rabbit, {url, type})
       await consumeResponses(client, rabbit, {url, type})
